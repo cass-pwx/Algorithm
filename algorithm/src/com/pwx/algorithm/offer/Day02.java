@@ -7,9 +7,9 @@ package com.pwx.algorithm.offer;
  */
 public class Day02 {
     /*public static void main(String[] args) {
-        Day02Solution2 solution2 = new Day02Solution2();
+        Day02Solution solution = new Day02Solution();
         ListNode head = new ListNode(1,new ListNode(2,new ListNode(3, new ListNode(4, new ListNode(5)))));
-        ListNode node = solution2.reverseList2(head);
+        ListNode node = solution.reverseList2(head);
         while (node != null){
             System.out.println(node.val);
             node = node.next;
@@ -17,7 +17,7 @@ public class Day02 {
     }*/
 
     public static void main(String[] args) {
-        Day02Solution3 solution3 = new Day02Solution3();
+        Day02Solution solution = new Day02Solution();
         Node head = new Node(7);
         Node node1 = new Node(13);
         Node node2 = new Node(11);
@@ -33,14 +33,11 @@ public class Day02 {
         node3.random = node1;
         node4.next = null;
         node4.random = head;
-        solution3.copyRandomList(head);
+        solution.copyRandomList(head);
     }
 }
 
-/**
- * 输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
- * Definition for singly-linked list.
- */
+
 class ListNode {
     int val;
     ListNode next;
@@ -48,6 +45,13 @@ class ListNode {
     ListNode(int x,ListNode next){val = x; this.next = next;}
 }
 class Day02Solution {
+
+    /**
+     * 输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
+     * Definition for singly-linked list.
+     * @param head -
+     * @return -
+     */
     public int[] reversePrint(ListNode head) {
         int size = 0;
         ListNode node = head;
@@ -62,15 +66,13 @@ class Day02Solution {
         }
         return arr;
     }
-}
 
-/**
- * 定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
- * Definition for singly-linked list.
- */
-class Day02Solution2 {
     /**
+     * 定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
+     * Definition for singly-linked list.
      * 方法1：直接使用新的节点，消耗大量的空间，编码简单
+     * @param head -
+     * @return -
      */
     public ListNode reverseList(ListNode head) {
         ListNode dummyHead = new ListNode(-1);
@@ -90,6 +92,8 @@ class Day02Solution2 {
 
     /**
      * 方法2：切点，然后接上一个新的虚拟节点
+     * @param head -
+     * @return -
      */
     public ListNode reverseList2(ListNode head) {
         ListNode dummyHead = new ListNode(-1);
@@ -113,28 +117,16 @@ class Day02Solution2 {
     private void cutNode(ListNode head){
         head.next = null;
     }
-}
 
-/**
- * 请实现 copyRandomList 函数，复制一个复杂链表。在复杂链表中，
- * 每个节点除了有一个 next 指针指向下一个节点，还有一个 random 指针指向链表中的任意节点或者 null。
- * 输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
- * 输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]
- * 不能直接输出原来的。
- */
-class Node {
-    int val;
-    Node next;
-    Node random;
-
-    public Node(int val) {
-        this.val = val;
-        this.next = null;
-        this.random = null;
-    }
-}
-
-class Day02Solution3 {
+    /**
+     * 请实现 copyRandomList 函数，复制一个复杂链表。在复杂链表中，
+     * 每个节点除了有一个 next 指针指向下一个节点，还有一个 random 指针指向链表中的任意节点或者 null。
+     * 输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+     * 输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]
+     * 不能直接输出原来的。
+     * @param head -
+     * @return -
+     */
     public Node copyRandomList(Node head) {
         if (head == null){
             return null;
@@ -165,5 +157,17 @@ class Day02Solution3 {
             }
         }
         return dummyNode;
+    }
+}
+
+class Node {
+    int val;
+    Node next;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
     }
 }
