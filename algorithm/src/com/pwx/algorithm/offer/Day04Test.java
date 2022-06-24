@@ -2,6 +2,11 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author 彭伟鑫#A04154
  * @date 2022.6.24
@@ -30,6 +35,34 @@ class Solution {
      * @return -
      */
     public int findRepeatNumber(int[] nums) {
+        int length = nums.length;
+        if(length < 1){
+            return -1;
+        }
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            if (set.contains(num)) {
+                return num;
+            }
+            set.add(num);
+        }
+        return -1;
+    }
+
+    /**
+     * 方法2
+     * @param nums -
+     * @return -
+     */
+    public int findRepeatNumber2(int[] nums) {
+        int[] result = new int[nums.length];
+        for (int num : nums) {
+            if (result[num] > 0) {
+                return num;
+            } else {
+                result[num]++;
+            }
+        }
         return -1;
     }
 
@@ -50,7 +83,34 @@ class Solution {
      * @return -
      */
     public int search(int[] nums, int target) {
-        return -1;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int num : nums){
+            map.merge(num, 1, Integer::sum);
+        }
+
+        return map.get(target) != null ? map.get(target) : 0;
+    }
+
+    /**
+     * 方法2
+     * @param nums -
+     * @return -
+     */
+    public int search2(int[] nums, int target) {
+        if(nums.length < 1){
+            return 0;
+        }
+        int count = 0;
+        for (int num : nums) {
+            if (num == target) {
+                count++;
+            }
+            if (num > target) {
+                break;
+            }
+        }
+
+        return count;
     }
 
     /**
@@ -70,6 +130,34 @@ class Solution {
      * @return -
      */
     public int missingNumber(int[] nums) {
-        return -1;
+        int length = nums.length;
+        if(length < 1){
+            return -1;
+        }
+        int left = 0;
+        int right = length - 1;
+        while(left < right){
+            int mid = (left + right) >> 1;
+            if(mid != nums[mid]){
+                right = mid;
+            }else{
+                left = mid + 1;
+            }
+        }
+        return left == length -1 && left == nums[left] ? left + 1 : left;
+    }
+
+    /**
+     * 方法2：利用和算出来
+     * @param nums -
+     * @return -
+     */
+    public int missingNumber2(int[] nums) {
+        int oriSum = ((nums.length + 1) * nums.length) >> 1;
+        int realSum = 0;
+        for (int num : nums) {
+            realSum += num;
+        }
+        return oriSum - realSum;
     }
 }
