@@ -8,10 +8,7 @@ import java.util.LinkedList;
  * @author 彭伟鑫#A04154
  * @date 2022.6.23
  */
-public class Day01 {
-    public static void main(String[] args) {
-
-    }
+public class Day01Test {
 }
 
 

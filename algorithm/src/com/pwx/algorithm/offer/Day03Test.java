@@ -1,14 +1,17 @@
 package com.pwx.algorithm.offer;
 
+import org.junit.jupiter.api.Test;
+
 /**
  * @author 彭伟鑫#A04154
  * @date 2022.6.23
  */
-public class Day03 {
-    public static void main(String[] args) {
+public class Day03Test {
+
+    @Test
+    public void test1(){
         Day03Solution day03Solution = new Day03Solution();
         System.out.println(day03Solution.reverseLeftWords("abcdefg", 2));
-
     }
 }
 

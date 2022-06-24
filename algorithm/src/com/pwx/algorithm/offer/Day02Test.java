@@ -1,12 +1,16 @@
 package com.pwx.algorithm.offer;
 
+import org.junit.jupiter.api.Test;
+
 /**
  *
  * @author 彭伟鑫#A04154
  * @date 2020.6.23
  */
-public class Day02 {
-    /*public static void main(String[] args) {
+public class Day02Test {
+
+    @Test
+    public void test1() {
         Day02Solution solution = new Day02Solution();
         ListNode head = new ListNode(1,new ListNode(2,new ListNode(3, new ListNode(4, new ListNode(5)))));
         ListNode node = solution.reverseList2(head);
@@ -14,9 +18,10 @@ public class Day02 {
             System.out.println(node.val);
             node = node.next;
         }
-    }*/
+    }
 
-    public static void main(String[] args) {
+    @Test
+    public void test2() {
         Day02Solution solution = new Day02Solution();
         Node head = new Node(7);
         Node node1 = new Node(13);
@@ -53,6 +58,9 @@ class Day02Solution {
      * @return -
      */
     public int[] reversePrint(ListNode head) {
+        if(head == null){
+            return new int[0];
+        }
         int size = 0;
         ListNode node = head;
         while(node != null){

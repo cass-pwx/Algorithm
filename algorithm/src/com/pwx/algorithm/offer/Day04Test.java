@@ -1,11 +1,15 @@
 package com.pwx.algorithm.offer;
 
+import org.junit.jupiter.api.Test;
+
 /**
  * @author 彭伟鑫#A04154
  * @date 2022.6.24
  */
-public class Day04 {
-    public static void main(String[] args) {
+public class Day04Test {
+
+    @Test
+    public void test(){
 
     }
 }
@@ -26,7 +30,7 @@ class Solution {
      * @return -
      */
     public int findRepeatNumber(int[] nums) {
-
+        return -1;
     }
 
     /**
@@ -46,7 +50,7 @@ class Solution {
      * @return -
      */
     public int search(int[] nums, int target) {
-
+        return -1;
     }
 
     /**
@@ -66,6 +70,6 @@ class Solution {
      * @return -
      */
     public int missingNumber(int[] nums) {
-
+        return -1;
     }
 }
