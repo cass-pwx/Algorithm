@@ -2,6 +2,9 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * @author 彭伟鑫#A04154
  * @date 2022.6.25
@@ -9,7 +12,10 @@ import org.junit.jupiter.api.Test;
 public class Day05Test {
 
     @Test
-    public void test1(){}
+    public void test1(){
+        Day05Solution solution = new Day05Solution();
+        System.out.println(solution.firstUniqChar2("adaccbeff"));
+    }
 
 }
 
@@ -42,6 +48,22 @@ class Day05Solution {
      * @return -
      */
     public boolean findNumberIn2DArray(int[][] matrix, int target) {
+        if(matrix.length < 1){
+            return false;
+        }
+        int m = matrix[0].length;
+        int n = matrix.length;
+        int p = m - 1;
+        int q = 0;
+        while(p >= 0 && q < n){
+            if(matrix[q][p] < target){
+                q ++;
+            }else if(matrix[q][p] > target){
+                p --;
+            }else{
+                return true;
+            }
+        }
         return false;
     }
 
@@ -67,7 +89,51 @@ class Day05Solution {
      * @return -
      */
     public int minArray(int[] numbers) {
-        return -1;
+        int length = numbers.length;
+        if(length < 1){
+            return -1;
+        }
+        if(length == 1){
+            return numbers[0];
+        }
+        for (int i = 0; i < length - 1; i++) {
+            if(numbers[i] > numbers[i+1]){
+                return numbers[i+1];
+            }
+        }
+        return numbers[0];
+    }
+
+    /**
+     * 方法2：使用2分法（有序）
+     * @param numbers -
+     * @return -
+     */
+    public int minArray2(int[] numbers) {
+        if(numbers.length < 1){
+            return -1;
+        }
+        return binarySearch(numbers);
+    }
+
+    private int binarySearch(int[] numbers) {
+        int left = 0;
+        int right = numbers.length - 1;
+        while(left < right){
+            int mid = (left + right) >> 1;
+            //如果中间值小于最右边的值，这证明右边是有序的,那这时候最小值一定在左边
+            if(numbers[mid] < numbers[right]){
+                right = mid ;
+            }else if(numbers[mid] > numbers[right]){
+                //如果中间的值大于最右边的值，那么说明中间有一个最小值
+                left = mid + 1;
+            }else {
+                //这里有一种情况 [3,3,1,3] [2,3,0,1,1,1,1]
+                //这时候要去重
+                right --;
+            }
+        }
+        return numbers[left];
     }
 
 
@@ -89,7 +155,55 @@ class Day05Solution {
      * @return -
      */
     public char firstUniqChar(String s) {
-        return 's';
+        int length = s.length();
+        if (length < 1){
+            return ' ';
+        }
+        //用于记录出现的先后
+        int orderIndex = 0;
+        char[] order = new char[26];
+        //总共有128个字符
+        int[] arr = new int[26];
+        for(char a : s.toCharArray()){
+            int index = a - 'a';
+            if(arr[index] == 0){
+                order[orderIndex++] = a;
+            }
+            arr[index] ++;
+        }
+
+        for(char p : order){
+            if(p == '\u0000'){
+                break;
+            }
+            int index = p - 'a';
+            if(arr[index] == 1){
+                return p;
+            }
+        }
+        return ' ';
     }
 
+
+    public char firstUniqChar2(String s) {
+        int length = s.length();
+        if (length < 1){
+            return ' ';
+        }
+        Map<Character, Integer> map = new LinkedHashMap<>();
+        for(char a : s.toCharArray()){
+            if(map.get(a) != null){
+                map.merge(a, 1, Integer::sum);
+            }else{
+                map.put(a, 1);
+            }
+        }
+
+        for (Map.Entry<Character, Integer> characterIntegerEntry : map.entrySet()) {
+            if(characterIntegerEntry.getValue() == 1){
+                return characterIntegerEntry.getKey();
+            }
+        }
+        return ' ';
+    }
 }
