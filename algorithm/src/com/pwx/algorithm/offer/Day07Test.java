@@ -2,6 +2,9 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author 彭伟鑫#A04154
  * @date 2022.6.27
@@ -10,7 +13,23 @@ public class Day07Test {
 
     @Test
     public void test(){
+        //[2,3,2,1]
+        //[3,null,2,2]
+        Day07Solution solution = new Day07Solution();
+        TreeNode root = new TreeNode(2);
+        TreeNode node1 = new TreeNode(3);
+        TreeNode node2 = new TreeNode(2);
+        TreeNode node3 = new TreeNode(1);
+        root.left = node1;
+        root.right = node2;
+        node2.left = node3;
 
+        TreeNode childRoot = new TreeNode(3);
+        TreeNode node4 = new TreeNode(2);
+        TreeNode node5 = new TreeNode(2);
+        childRoot.right = node4;
+        node4.left = node5;
+        System.out.println(solution.isSubStructure(root, childRoot));
     }
 }
 
@@ -18,9 +37,9 @@ public class Day07Test {
 class Day07Solution {
 
     /**
-     * 输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+     * 输入两棵二叉树 A和 B，判断 B 是不是 A 的子结构。(约定空树不是任意一个树的子结构)
      *
-     * B是A的子结构， 即 A中有出现和B相同的结构和节点值。
+     * B 是 A 的子结构， 即 A 中有出现和 B 相同的结构和节点值。
      *
      * 例如:
      * 给定的树 A:
@@ -41,6 +60,7 @@ class Day07Solution {
      *
      * 输入：A = [1,2,3], B = [3,1]
      * 输出：false
+     *
      * 示例 2：
      *
      * 输入：A = [3,4,5,1,2], B = [4,1]
@@ -51,6 +71,86 @@ class Day07Solution {
      */
     public boolean isSubStructure(TreeNode A, TreeNode B) {
         return false;
+    }
+
+    /**
+     * 这里不能直接转成数组再进行对比，无论前中后序都不成立
+     * 放在这里只是作为参照
+     * @param A -
+     * @param B -
+     * @return -
+     */
+    public boolean isSubStructure1(TreeNode A, TreeNode B) {
+        List<Integer> oriList = new ArrayList<>();
+        List<Integer> childList = new ArrayList<>();
+        //这里使用后序遍历
+        posTraversal(A, oriList);
+        posTraversal(B, childList);
+        for (int i = 0; i < oriList.size() - childList.size(); i++) {
+            List<Integer> subOriList = oriList.subList(i, i + childList.size());
+            int q = 0;
+            while(q < childList.size()){
+                if(subOriList.get(q).equals(childList.get(q))){
+                    q ++;
+                }else{
+                    break;
+                }
+            }
+            if(q == childList.size()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 后序遍历
+     * @param root -
+     * @param list -
+     */
+    private void posTraversal(TreeNode root, List<Integer> list) {
+        if(root.left != null){
+            posTraversal(root.left, list);
+        }
+
+        if(root.right != null){
+            posTraversal(root.right, list);
+        }
+
+        list.add(root.val);
+    }
+
+    /**
+     * 先序遍历
+     * @param root -
+     * @param list -
+     */
+    private void preTraversal(TreeNode root, List<Integer> list) {
+        list.add(root.val);
+        if(root.left != null){
+            posTraversal(root.left, list);
+        }
+
+        if(root.right != null){
+            posTraversal(root.right, list);
+        }
+    }
+
+    /**
+     * 中序遍历
+     * @param root -
+     * @param list -
+     */
+    private void midTraversal(TreeNode root, List<Integer> list) {
+
+        if(root.left != null){
+            posTraversal(root.left, list);
+        }
+
+        list.add(root.val);
+        if(root.right != null){
+            posTraversal(root.right, list);
+        }
     }
 
 
