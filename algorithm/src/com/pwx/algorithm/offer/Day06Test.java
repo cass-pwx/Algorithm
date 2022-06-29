@@ -17,9 +17,13 @@ public class Day06Test {
         TreeNode root = new TreeNode(3);
         TreeNode node1 = new TreeNode(9);
         TreeNode node2 = new TreeNode(20);
+        TreeNode node3 = new TreeNode(15);
+        TreeNode node4 = new TreeNode(7);
         root.left = node1;
         root.right = node2;
-        System.out.println(Arrays.toString(solution.levelOrder(root)));
+        node2.left = node3;
+        node2.right = node4;
+        solution.levelOrder5(root);
     }
 
 }
@@ -100,9 +104,77 @@ class Day06Solution {
      */
     public List<List<Integer>> levelOrder2(TreeNode root) {
         List<List<Integer>> result = new ArrayList<>();
+        if(root == null){
+            return result;
+        }
+        LinkedList<TreeNode> queue1 = new LinkedList<>();
+        LinkedList<TreeNode> queue2 = new LinkedList<>();
+
+        queue1.add(root);
+        while (!queue1.isEmpty()){
+            LinkedList<Integer> list = new LinkedList<>();
+            while(!queue1.isEmpty()){
+                TreeNode node = queue1.pop();
+                list.add(node.val);
+                if(node.left != null){
+                    queue2.add(node.left);
+                }
+                if(node.right != null){
+                    queue2.add(node.right);
+                }
+                if(queue1.isEmpty()){
+                    result.add(list);
+                }
+            }
+
+            list = new LinkedList<>();
+            while(!queue2.isEmpty()){
+                TreeNode node = queue2.pop();
+                list.add(node.val);
+                if(node.left != null){
+                    queue1.add(node.left);
+                }
+                if(node.right != null){
+                    queue1.add(node.right);
+                }
+                if(queue2.isEmpty()){
+                    result.add(list);
+                }
+            }
+        }
         return result;
     }
 
+
+    List<List<Integer>> node=new ArrayList<>();
+
+    /**
+     * 方法2：递归
+     * @param root -
+     * @return -
+     */
+    public List<List<Integer>> levelOrder3(TreeNode root) {
+        traverse(root,0);
+        return node;
+    }
+
+    /**
+     *
+     * @param root -
+     * @param level -
+     */
+    private void traverse(TreeNode root, int level) {
+        if(root != null){
+            if(node.size() <= level){node.add(new ArrayList<>());}
+            node.get(level).add(root.val);
+            if(root.left != null){
+                traverse(root.left, level + 1);
+            }
+            if(root.right != null){
+                traverse(root.right, level + 1);
+            }
+        }
+    }
 
     /**
      * 请实现一个函数按照之字形顺序打印二叉树，
@@ -126,9 +198,83 @@ class Day06Solution {
      * @param root -
      * @return -
      */
-    public List<List<Integer>> levelOrder3(TreeNode root) {
+    public List<List<Integer>> levelOrder4(TreeNode root) {
         List<List<Integer>> result = new ArrayList<>();
+        if(root == null){
+            return result;
+        }
+        Stack<TreeNode> stack1 = new Stack<>();
+        Stack<TreeNode> stack2 = new Stack<>();
+
+        stack1.add(root);
+        while (!stack1.isEmpty()){
+            LinkedList<Integer> list = new LinkedList<>();
+            while(!stack1.isEmpty()){
+                TreeNode node = stack1.pop();
+                list.add(node.val);
+                if(node.left != null){
+                    stack2.add(node.left);
+                }
+                if(node.right != null){
+                    stack2.add(node.right);
+                }
+                if(stack1.isEmpty()){
+                    result.add(list);
+                }
+            }
+
+            list = new LinkedList<>();
+            while(!stack2.isEmpty()){
+                TreeNode node = stack2.pop();
+                list.add(node.val);
+                if(node.right != null){
+                    stack1.add(node.right);
+                }
+                if(node.left != null){
+                    stack1.add(node.left);
+                }
+                if(stack2.isEmpty()){
+                    result.add(list);
+                }
+            }
+        }
         return result;
     }
 
+
+    /**
+     * 方法2
+     * @param root -
+     * @return -
+     */
+    public List<List<Integer>> levelOrder5(TreeNode root){
+        traverse1(root,0);
+        for (int i = 0; i < node.size(); i++) {
+            if(i % 2 != 0){
+                Collections.reverse(node.get(i));
+            }
+        }
+        return node;
+    }
+
+    /**
+     *
+     * @param root -
+     * @param level -
+     */
+    private void traverse1(TreeNode root, int level) {
+        if(root != null){
+            if(node.size() <= level){
+                node.add(new ArrayList<>());
+            }
+            node.get(level).add(root.val);
+            if(root.left != null){
+                traverse1(root.left, level + 1);
+            }
+
+            if(root.right != null){
+                traverse1(root.right, level + 1);
+            }
+        }
+    }
 }
