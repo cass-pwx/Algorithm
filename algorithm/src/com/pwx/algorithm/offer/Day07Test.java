@@ -70,6 +70,9 @@ class Day07Solution {
      * @return -
      */
     public boolean isSubStructure(TreeNode A, TreeNode B) {
+        if(B == null){
+            return false;
+        }
         return false;
     }
 
@@ -81,6 +84,9 @@ class Day07Solution {
      * @return -
      */
     public boolean isSubStructure1(TreeNode A, TreeNode B) {
+        if(B == null){
+            return false;
+        }
         List<Integer> oriList = new ArrayList<>();
         List<Integer> childList = new ArrayList<>();
         //这里使用后序遍历
