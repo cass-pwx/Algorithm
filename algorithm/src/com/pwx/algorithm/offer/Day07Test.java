@@ -70,13 +70,18 @@ class Day07Solution {
      * @return -
      */
     public boolean isSubStructure(TreeNode A, TreeNode B) {
-        if(B == null){
-            return false;
-        }
-        return false;
+        if(A == null || B == null){ return false; }
+        return find(A, B) || isSubStructure(A.left, B) || isSubStructure(A.right, B);
+    }
+
+    private boolean find(TreeNode parent, TreeNode son){
+        if(son == null){return true;}
+        if(parent == null){return false;}
+        return parent.val == son.val && find(parent.left, son.left) && find(parent.right, son.right);
     }
 
     /**
+     * 错误解法
      * 这里不能直接转成数组再进行对比，无论前中后序都不成立
      * 放在这里只是作为参照
      * @param A -
@@ -176,7 +181,7 @@ class Day07Solution {
      *    /  \
      *   7   2
      *  / \  / \
-     * 9  6 3 1
+     * 9  6 3  1
      *
      * 
      *
@@ -189,7 +194,38 @@ class Day07Solution {
      * @return -
      */
     public TreeNode mirrorTree(TreeNode root) {
-        return null;
+        if(root == null){
+            return null;
+        }
+        traverse(root);
+        return root;
+    }
+
+    private void traverse(TreeNode root) {
+        if(root == null){
+            return;
+        }
+        TreeNode node = root.left;
+        root.left = root.right;
+        root.right = node;
+        if(root.left != null){
+            traverse(root.left);
+        }
+
+        if(root.right != null){
+            traverse(root.right);
+        }
+    }
+
+    public TreeNode mirrorTree1(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        TreeNode left = mirrorTree(root.left);
+        TreeNode right = mirrorTree(root.right);
+        root.left = right;
+        root.right = left;
+        return root;
     }
 
     /**
@@ -210,8 +246,6 @@ class Day07Solution {
      *  \  \
      *  3  3
      *
-     * 
-     *
      * 示例 1：
      *
      * 输入：root = [1,2,2,3,4,4,3]
@@ -225,6 +259,21 @@ class Day07Solution {
      * @return -
      */
     public boolean isSymmetric(TreeNode root) {
-        return false;
+        if (root == null) {
+            return true;
+        }
+        return helper(root.left, root.right);
+    }
+
+    public boolean helper(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null) {
+            return true;
+        }
+        if (root1 == null || root2 == null) {
+            return false;
+        }
+        return root1.val == root2.val
+                && helper(root1.left, root2.right)
+                && helper(root1.right, root2.left);
     }
 }
