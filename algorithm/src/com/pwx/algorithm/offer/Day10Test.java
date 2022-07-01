@@ -2,6 +2,9 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author 彭伟鑫#A04154
  * @date 2022.6.30
@@ -27,10 +30,27 @@ class Day10Solution {
      * 输出: 5
      * 解释: 12258有5种不同的翻译，分别是"bccfi", "bwfi", "bczi", "mcfi"和"mzi"
      *
+     * 提示：
+     *      0 <= num < 2的31
+     *
      * @param num -
      * @return -
      */
     public int translateNum(int num) {
+        //这里和斐波那契差不多，不过要加一个判断，如果两位的时候，超出25，那就不算了。
+        if(num == 0){
+            return 1;
+        }
+        List<Integer> reNumList = new ArrayList<>();
+        while(num > 0){
+            reNumList.add(num % 10);
+            num = num % 10;
+        }
+        int[] nums = new int[reNumList.size()];
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = reNumList.get(nums.length - 1 - i);
+        }
+
         return -1;
     }
 

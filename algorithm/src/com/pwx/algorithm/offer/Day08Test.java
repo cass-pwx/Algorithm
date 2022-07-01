@@ -10,12 +10,15 @@ public class Day08Test {
 
     @Test
     public void test1(){
-
+        Day08Solution solution = new Day08Solution();
+        int[] num = {7,1,5,3,6,4};
+        solution.maxProfit(num);
     }
 }
 
 class Day08Solution {
 
+    private static final Integer MOD = 1000000007;
     /**
      * 写一个函数，输入 n ，求斐波那契（Fibonacci）数列的第 n 项（即 F(N)）。斐波那契数列的定义如下：
      *
@@ -39,7 +42,35 @@ class Day08Solution {
      * @return -
      */
     public int fib(int n) {
-        return -1;
+        int p = 0;
+        int q = 1;
+        int r = 1;
+        int i = 0;
+        while(i <= n){
+            p = q;
+            q = r;
+            r = (p + q) % MOD;
+            i++;
+        }
+        return p;
+    }
+
+
+    /**
+     * 方法二：时间复杂度有点高
+     * @param n -
+     * @return -
+     */
+    public int fib1(int n) {
+        if(n == 0){
+            return 0;
+        }
+
+        if(n == 1){
+            return 1;
+        }
+
+        return fib(n - 1) + fib(n - 2);
     }
 
 
@@ -68,13 +99,23 @@ class Day08Solution {
      * @return -
      */
     public int numWays(int n) {
-        return -1;
+        int p = 0;
+        int q = 0;
+        int r = 1;
+        int i = 0;
+        while(i <= n){
+            p = q;
+            q = r;
+            r = (p + q) % MOD;
+            i++;
+        }
+        return p;
     }
 
 
+    int maxValue = 0;
     /**
      * 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
-     *
      *
      * 示例 1:
      *
@@ -88,14 +129,109 @@ class Day08Solution {
      * 输出: 0
      * 解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
      *
-     * 限制：
-     *
-     * 0 <= 数组长度 <= 10^5
-     *
      * @param prices -
      * @return -
      */
     public int maxProfit(int[] prices) {
-        return -1;
+        //归并算法，左边找最小的，右边找最大的
+        int length = prices.length;
+        if(length == 0){
+            return 0;
+        }
+
+        find(prices, 0, length - 1);
+        return maxValue;
+    }
+
+    /**
+     * 通过归并算法获取最大值
+     * [7,1,5,3,6,4]
+     * @param prices -
+     * @param left -
+     * @param right -
+     */
+    private void find(int[] prices, int left, int right) {
+        if(left >= right){
+            return;
+        }
+        int mid = ((right - left) >> 1) + left;
+        find(prices, left, mid);
+        find(prices, mid + 1, right);
+        int min = getMin(prices, left, mid);
+        int max = getMax(prices, mid + 1, right);
+        maxValue = Math.max(maxValue, max - min);
+    }
+
+    private int getMax(int[] prices, int left, int right) {
+        int max = Integer.MIN_VALUE;
+        for (int i = left; i <= right; i++) {
+            max = Math.max(max, prices[i]);
+        }
+        return max;
+    }
+
+    private int getMin(int[] prices, int left, int right) {
+        int min = Integer.MAX_VALUE;
+        for (int i = left; i <= right; i++) {
+            min = Math.min(min, prices[i]);
+        }
+        return min;
+    }
+
+
+    /**
+     * 使用一维数组的动态规划，但是时间太长了。
+     * @param prices
+     * @return
+     */
+    public int maxProfit2(int[] prices) {
+        int length = prices.length;
+        if(prices.length == 0){
+            return 0;
+        }
+        int[] maxValue = new int[length];
+        int max = 0;
+        for (int i = 0; i < length; i++) {
+            int count = prices[i];
+            int j = i;
+            for (; j < length; j++) {
+                int value = prices[j] - count;
+                maxValue[j] = Math.max(value, 0);
+                max = Math.max(maxValue[j], max);
+            }
+        }
+        return max;
+    }
+
+
+    /**
+     * 内存超出限制
+     * @param prices -
+     * @return -
+     */
+    public int maxProfit1(int[] prices) {
+        int length = prices.length;
+        if(prices.length == 0){
+            return 0;
+        }
+        int[][] maxValue = new int[length][length + 1];
+
+        for (int i = 0; i < length; i++) {
+            int count = prices[i];
+            int max = 0;
+            int j = i;
+            for (; j < length; j++) {
+                int value = prices[j] - count;
+                maxValue[i][j] = Math.max(value, 0);
+                max = Math.max(value, max);
+            }
+            maxValue[i][j] = max;
+        }
+
+        int max = maxValue[0][length];
+        for (int i = 1; i < length; i++) {
+            max = Math.max(max, maxValue[i][length]);
+        }
+        return max;
     }
 }

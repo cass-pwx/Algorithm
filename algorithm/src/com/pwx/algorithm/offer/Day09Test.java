@@ -9,7 +9,16 @@ import org.junit.jupiter.api.Test;
 public class Day09Test {
 
     @Test
-    public void test1(){}
+    public void test1(){
+        Day09Solution solution = new Day09Solution();
+        int[][] nums =
+                {
+                        {1,3,1},
+                        {1,5,1},
+                        {4,2,1}
+                };
+        System.out.println(solution.maxValue(nums));
+    }
 }
 
 class Day09Solution {
@@ -29,7 +38,28 @@ class Day09Solution {
      * @return -
      */
     public int maxSubArray(int[] nums) {
-        return -1;
+        int length = nums.length;
+        if(length == 0){
+            return 0;
+        }
+        int index = 0;
+        for (int i = 0; i < length; i++) {
+            if (nums[i] > 0){
+                index = i;
+                break;
+            }
+        }
+        //从第一个正数开始
+        int count = 0;
+        int max = nums[0];
+        for (int i = index; i < length; i++) {
+            count += nums[i];
+            max = Math.max(max, count);
+            if(count < 0){
+                count = 0;
+            }
+        }
+        return max;
     }
 
     /**
@@ -53,6 +83,62 @@ class Day09Solution {
      * @return -
      */
     public int maxValue(int[][] grid) {
-        return -1;
+        int m = grid.length;
+        if(m == 0){
+            return 0;
+        }
+        int n = grid[0].length;
+        int[][] maxValue = new int[m][n];
+
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            count += grid[0][i];
+            maxValue[0][i] = count;
+        }
+
+        count = 0;
+        for (int i = 0; i < m; i++) {
+            count += grid[i][0];
+            maxValue[i][0] = count;
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                maxValue[i][j] = Math.max(maxValue[i-1][j], maxValue[i][j-1]) + grid[i][j];
+            }
+        }
+        return maxValue[m-1][n-1];
+    }
+
+
+    /**
+     * 用一维数组
+     * @param grid -
+     * @return -
+     */
+    public int maxValue1(int[][] grid) {
+        int m = grid.length;
+        if(m == 0){
+            return 0;
+        }
+        int n = grid[0].length;
+        int[] maxValue = new int[n];
+
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            count += grid[0][i];
+            maxValue[i] = count;
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if(j == 0){
+                    maxValue[j] = maxValue[j] + grid[i][j];
+                }else {
+                    maxValue[j] = Math.max(maxValue[j], maxValue[j - 1]) + grid[i][j];
+                }
+            }
+        }
+        return maxValue[n-1];
     }
 }
