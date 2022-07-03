@@ -2,8 +2,7 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author 彭伟鑫#A04154
@@ -13,7 +12,8 @@ public class Day10Test {
 
     @Test
     public void test1(){
-
+        Day10Solution solution = new Day10Solution();
+        System.out.println(solution.lengthOfLongestSubstring("dvdf"));
     }
 }
 
@@ -44,25 +44,47 @@ class Day10Solution {
         List<Integer> reNumList = new ArrayList<>();
         while(num > 0){
             reNumList.add(num % 10);
-            num = num % 10;
+            num = num / 10;
         }
         int[] nums = new int[reNumList.size()];
         for (int i = 0; i < nums.length; i++) {
             nums[i] = reNumList.get(nums.length - 1 - i);
         }
+        return fib(nums);
+    }
 
-        return -1;
+    /**
+     * 斐波那契
+     * @param nums -
+     * @return -
+     */
+    private int fib(int[] nums) {
+        int p ;
+        int q = 1;
+        int r = 1;
+        int i = 1;
+        while(i < nums.length){
+            p = q;
+            q = r;
+            if(nums[i-1] != 0 && nums[i-1] * 10 + nums[i] < 26){
+                r = p + q;
+            }else{
+                r = q;
+            }
+            i ++;
+        }
+        return r;
     }
 
     /**
      * 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
-     *
      *
      * 示例1:
      *
      * 输入: "abcabcbb"
      * 输出: 3
      * 解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+     *
      * 示例 2:
      *
      * 输入: "bbbbb"
@@ -79,6 +101,91 @@ class Day10Solution {
      * @return -
      */
     public int lengthOfLongestSubstring(String s) {
-        return -1;
+        if(s.length() == 0) {
+            return 0;
+        }
+        int[] appear = new int[128];
+        int left = 0;
+        int right = 0;
+        int maxLength = 1;
+        while(right < s.length()){
+            if(appear[s.charAt(right)] == 0){
+                appear[s.charAt(right)]++;
+                maxLength = Math.max(maxLength,right-left+1);
+                right++;
+            }
+            else{
+                appear[s.charAt(right)]++;
+                while(appear[s.charAt(right)] > 1){
+                    appear[s.charAt(left)]--;
+                    left++;
+                }
+                right++;
+            }
+        }
+        return maxLength;
+    }
+
+    public int lengthOfLongestSubstring3(String s) {
+        int len = 0;
+
+        Set<Character> set = new HashSet<>();
+        for(int l = 0, r = 0; r < s.length(); r++){
+            char str = s.charAt(r);
+            while(set.contains(str)){
+                set.remove(s.charAt(l++));
+            }
+            set.add(str);
+            len = Math.max(len,r - l + 1);
+        }
+        return len;
+    }
+
+
+    public int lengthOfLongestSubstring2(String s) {
+        if(s.length() < 1) { return 0; }
+        int[] result = new int[128];
+        //初始化数组
+        Arrays.fill(result, -1);
+
+        int max = 0;
+        int count = 0;
+
+        char[] chars = s.toCharArray();
+        for(int i = 0; i < chars.length; i++){
+            if(result[chars[i]] >= 0){
+                max = Math.max(max,count);
+                i = result[chars[i]] + 1;
+                Arrays.fill(result, -1);
+                count = 0;
+            }
+            result[chars[i]] = i;
+            count ++;
+        }
+
+        max = Math.max(max,count);
+        return max;
+    }
+
+    public int lengthOfLongestSubstring1(String s) {
+        if (s.length() == 0){
+            return 0;
+        }
+        int maxLength = 0;
+        Set<Character> set = new LinkedHashSet<>();
+        LinkedList<Character> list = new LinkedList<>();
+        char[] array = s.toCharArray();
+        for (char a : array) {
+            if (set.contains(a)) {
+                maxLength = Math.max(maxLength, set.size());
+                set.clear();
+                while (a != list.pop());
+                set.addAll(list);
+            }
+            list.add(a);
+            set.add(a);
+        }
+        maxLength = Math.max(maxLength, set.size());
+        return maxLength;
     }
 }
