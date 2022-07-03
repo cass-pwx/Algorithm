@@ -38,7 +38,19 @@ class Day11Solution {
      * @return -
      */
     public ListNode deleteNode(ListNode head, int val) {
-        return null;
+        if(head == null){
+            return null;
+        }
+        ListNode node = head;
+        ListNode dummyNode = new ListNode(-1);
+        dummyNode.next = node;
+        ListNode preNode = dummyNode;
+        while(node.val != val){
+            preNode = node;
+            node = node.next;
+        }
+        preNode.next = node.next;
+        return dummyNode.next;
     }
 
 
@@ -58,6 +70,18 @@ class Day11Solution {
      * @return -
      */
     public ListNode getKthFromEnd(ListNode head, int k) {
-        return null;
+        if(head == null){
+            return null;
+        }
+        ListNode node = head;
+        ListNode preNode = head;
+        while(--k > 0){
+            node = node.next;
+        }
+        while(node.next != null){
+            preNode = preNode.next;
+            node = node.next;
+        }
+        return preNode;
     }
 }
