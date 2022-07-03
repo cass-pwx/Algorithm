@@ -128,7 +128,7 @@ class Day13Solution {
         String[] arr = s.split(" ");
         StringBuilder result = new StringBuilder();
         for (int i = arr.length - 1; i >= 0; i--) {
-            if (arr[i].equals("")) {
+            if ("".equals(arr[i])) {
                 continue;
             }
             //到头了，append然后去空格
