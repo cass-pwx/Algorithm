@@ -9,8 +9,19 @@ import org.junit.jupiter.api.Test;
 public class Day12Test {
 
     @Test
-    public void test1(){
+    public void test1() {
+        Day12Solution solution = new Day12Solution();
+        ListNode l1 = new ListNode(1, new ListNode(2, new ListNode(4)));
+        ListNode l2 = new ListNode(1, new ListNode(3, new ListNode(4)));
+        solution.mergeTwoLists(l1, l2);
+    }
 
+    @Test
+    public void test2() {
+        Day12Solution solution = new Day12Solution();
+        ListNode l1 = new ListNode(4, new ListNode(1, new ListNode(8, new ListNode(4, new ListNode(5)))));
+        ListNode l2 = new ListNode(5, new ListNode(0, new ListNode(1, new ListNode(8, new ListNode(4, new ListNode(5))))));
+        solution.getIntersectionNode(l1, l2);
     }
 }
 
@@ -29,7 +40,24 @@ class Day12Solution {
      * @return -
      */
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-        return null;
+        if (l1 == null && l2 == null) {
+            return null;
+        }
+        ListNode dummyNode = new ListNode(-1);
+        ListNode node = dummyNode;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                node.next = l1;
+                node = node.next;
+                l1 = l1.next;
+            } else {
+                node.next = l2;
+                node = node.next;
+                l2 = l2.next;
+            }
+        }
+        node.next = l1 != null ? l1 : l2;
+        return dummyNode.next;
     }
 
     /**
@@ -68,11 +96,22 @@ class Day12Solution {
      * 可假定整个链表结构中没有循环。
      * 程序尽量满足 O(n) 时间复杂度，且仅用 O(1) 内存。
      *
+     * 注：链表的公共节点是存的内存地址相同，而不是val相同
      * @param headA -
      * @param headB -
      * @return -
      */
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        return null;
+        if (headA == null || headB == null) {
+            return null;
+        }
+        ListNode n1 = headA;
+        ListNode n2 = headB;
+
+        while (n1 != n2) {
+            n1 = n1 == null ? headB : n1.next;
+            n2 = n2 == null ? headA : n2.next;
+        }
+        return n1;
     }
 }
