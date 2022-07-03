@@ -10,7 +10,9 @@ public class Day13Test {
 
     @Test
     public void test(){
-
+        Day13Solution solution = new Day13Solution();
+        int[] nums = {1, 2, 3, 4};
+        solution.exchange(nums);
     }
 }
 
@@ -29,27 +31,66 @@ class Day13Solution {
      * @return -
      */
     public int[] exchange(int[] nums) {
-        return new int[0];
+        int length = nums.length;
+        if (length <= 1) {
+            return nums;
+        }
+        int evenStart = length - 1;
+        int i = 0;
+        while (i < evenStart) {
+            if (nums[i] % 2 == 0) {
+                numChange(nums, i, evenStart);
+                evenStart--;
+            } else {
+                i++;
+            }
+        }
+        return nums;
+    }
+
+    private void numChange(int[] nums, int i, int evenStart) {
+        int num = nums[i];
+        nums[i] = nums[evenStart];
+        nums[evenStart] = num;
     }
 
     /**
      * 输入一个递增排序的数组和一个数字s，在数组中查找两个数，使得它们的和正好是s。如果有多对数字的和等于s，则输出任意一对即可。
-     *
+     * <p>
      * 示例 1：
-     *
+     * <p>
      * 输入：nums = [2,7,11,15], target = 9
      * 输出：[2,7] 或者 [7,2]
      * 示例 2：
-     *
+     * <p>
      * 输入：nums = [10,26,30,31,47,60], target = 40
      * 输出：[10,30] 或者 [30,10]
+     * 1 <= nums.length <= 10^5
      *
-     * @param nums -
+     * @param nums   -
      * @param target -
      * @return -
      */
     public int[] twoSum(int[] nums, int target) {
-        return new int[0];
+        int length = nums.length;
+        if (length <= 2) {
+            return nums;
+        }
+        int[] sums = new int[2];
+        int left = 0;
+        int right = length - 1;
+        while (left < right) {
+            if (nums[left] + nums[right] < target) {
+                left++;
+            } else if (nums[left] + nums[right] > target) {
+                right--;
+            } else {
+                sums[0] = nums[left];
+                sums[1] = nums[right];
+                return sums;
+            }
+        }
+        return sums;
     }
 
 
@@ -83,6 +124,21 @@ class Day13Solution {
      * @return -
      */
     public String reverseWords(String s) {
-        return null;
+        s = s.trim();
+        String[] arr = s.split(" ");
+        StringBuilder result = new StringBuilder();
+        for (int i = arr.length - 1; i >= 0; i--) {
+            if (arr[i].equals("")) {
+                continue;
+            }
+            //到头了，append然后去空格
+            if (i == 0) {
+                result.append(arr[i].trim());
+            } else {
+                // 怕有多余的空格，去掉，再加上去
+                result.append(arr[i].trim()).append(" ");
+            }
+        }
+        return result.toString();
     }
 }
