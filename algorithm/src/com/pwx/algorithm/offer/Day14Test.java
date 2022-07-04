@@ -10,7 +10,20 @@ public class Day14Test {
 
     @Test
     public void test1(){
+        Day14Solution solution = new Day14Solution();
+        char[][] board =
+                {
+                        {'A','B','C','E'},
+                        {'S','F','C','S'},
+                        {'A','D','E','E'}
+                };
+        System.out.println(solution.exist(board, "ABCCED"));
+    }
 
+    @Test
+    public void test2(){
+        Day14Solution solution = new Day14Solution();
+        System.out.println(solution.movingCount(16, 8, 4));
     }
 }
 
@@ -33,15 +46,56 @@ class Day14Solution {
      *
      * 输入：board = [["a","b"],["c","d"]], word = "abcd"
      * 输出：false
+     *
+     * 1 <= board.length <= 200
+     * 1 <= board[i].length <= 200
      * 
      * @param board -
      * @param word -
      * @return -
      */
     public boolean exist(char[][] board, String word) {
+        if(word.length() == 0) {
+            return true;
+        }
+        int m = board.length;
+        int n = board[0].length;
+        if(m * n<word.length()) {
+            return false;
+        }
+        int index = 0;
+        boolean[][] visited = new boolean[m][n];
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(board[i][j] == word.charAt(index) && find(i, j, word, index, visited, board)){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
+    public boolean find(int i, int j, String word ,int index, boolean[][] visited, char[][] board) {
+        if(i < 0 || j < 0|| i >= board.length || j >= board[0].length || visited[i][j]) {
+            return false;
+        }
+        if(board[i][j] == word.charAt(index) ){
+            if(index == word.length()-1){
+                return true;
+            }else{
+                visited[i][j] = true;
+                boolean res = find(i+1, j, word, index+1, visited, board)
+                        || find(i-1, j, word, index+1, visited, board)
+                        || find(i, j-1, word, index+1, visited, board)
+                        || find(i, j+1, word, index+1, visited, board);
+                visited[i][j] = false;
+                return res;
+            }
+        }
+        return false;
+    }
+
+    private int count = 0;
     /**
      * 地上有一个m行n列的方格，从坐标 [0,0] 到坐标 [m-1,n-1] 。一个机器人从坐标 [0, 0] 的格子开始移动，
      * 它每次可以向左、右、上、下移动一格（不能移动到方格外），也不能进入行坐标和列坐标的数位之和大于k的格子。
@@ -55,6 +109,8 @@ class Day14Solution {
      *
      * 输入：m = 3, n = 1, k = 0
      * 输出：1
+     * 1 <= n,m <= 100
+     * 0 <= k <= 20
      *
      * @param m -
      * @param n -
@@ -62,6 +118,36 @@ class Day14Solution {
      * @return -
      */
     public int movingCount(int m, int n, int k) {
-        return -1;
+        if(k == 0){
+            return 1;
+        }
+        boolean[][] isVisited = new boolean[m][n];
+        find(0, m, 0, n, k, isVisited);
+        return count;
+    }
+
+    private void find(int p, int m, int q, int n, int k, boolean[][] isVisited) {
+        if(p >= m || q >= n || p < 0 || q < 0 || isVisited[p][q]){
+            return;
+        }
+        isVisited[p][q] = true;
+        int num = get(p) + get(q);
+
+        if (num <= k){
+            count ++;
+            find(p + 1, m, q, n, k, isVisited);
+            find(p - 1, m, q, n, k, isVisited);
+            find(p, m, q + 1, n, k, isVisited);
+            find(p, m, q - 1, n, k, isVisited);
+        }
+    }
+
+    private int get(int x) {
+        int res = 0;
+        while (x != 0) {
+            res += x % 10;
+            x /= 10;
+        }
+        return res;
     }
 }
