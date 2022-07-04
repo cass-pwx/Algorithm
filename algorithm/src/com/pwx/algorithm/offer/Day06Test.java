@@ -1,6 +1,5 @@
 package com.pwx.algorithm.offer;
 
-import com.sun.jmx.remote.internal.ArrayQueue;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -32,7 +31,13 @@ class TreeNode {
     int val;
     TreeNode left;
     TreeNode right;
+    TreeNode() {}
     TreeNode(int x) { val = x; }
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
 }
 
 class Day06Solution {
