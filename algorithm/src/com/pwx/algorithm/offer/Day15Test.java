@@ -16,8 +16,28 @@ public class Day15Test {
     @Test
     public void test1(){
         Day15Solution solution = new Day15Solution();
-        TreeNode root = new TreeNode(5, new TreeNode(4, new TreeNode(11, new TreeNode(7), new TreeNode(2)), null), new TreeNode(8, new TreeNode(13), new TreeNode(4, new TreeNode(5), new TreeNode(1))));
-        System.out.println(solution.pathSum(root, 22));
+        /**
+         *       1
+         *      /\
+         *    -2 -3
+         *    /\  /
+         *   1 3 -2
+         *  /
+         * -1
+         */
+        TreeNode root = new TreeNode(1, new TreeNode(-2, new TreeNode(1, new TreeNode(-1), null), new TreeNode(3)), new TreeNode(-3, new TreeNode(-2), null));
+        System.out.println(solution.pathSum(root, -1));
+    }
+
+    @Test
+    public void test2() {
+        Day15Solution.Node root = new Day15Solution.Node(4,
+                new Day15Solution.Node(2,
+                        new Day15Solution.Node(1), new Day15Solution.Node(3)),
+                new Day15Solution.Node(5)
+        );
+        Day15Solution solution = new Day15Solution();
+        solution.treeToDoublyList(root);
     }
 }
 
@@ -77,7 +97,7 @@ class Day15Solution {
             return;
         }
 
-        if(count + root.val != target) {
+        if (count + root.val != target || root.left != null || root.right != null) {
             List<Integer> path = new ArrayList<>(pathList);
             path.add(root.val);
             find(path, target, root.left, count + root.val);
@@ -101,7 +121,34 @@ class Day15Solution {
      * @return -
      */
     public Node treeToDoublyList(Node root) {
-        return null;
+        if (root == null) {
+            return null;
+        }
+        Node dummyHead = new Node(-1);
+        List<Node> list = new ArrayList<>();
+        find(list, root);
+        build(list, dummyHead);
+        return dummyHead.right;
+    }
+
+    private void build(List<Node> list, Node dummyHead) {
+        Node head = dummyHead;
+        for (Node node : list) {
+            head.right = node;
+            node.left = head;
+            head = head.right;
+        }
+        head.right = dummyHead.right;
+        dummyHead.right.left = head;
+    }
+
+    private void find(List<Node> list, Node root) {
+        if (root == null) {
+            return;
+        }
+        find(list, root.left);
+        list.add(root);
+        find(list, root.right);
     }
 
 
@@ -139,7 +186,42 @@ class Day15Solution {
      * @return -
      */
     public int kthLargest(TreeNode root, int k) {
-        return -1;
+        if (root == null) {
+            return -1;
+        }
+        List<TreeNode> list = new ArrayList<>();
+        find(list, root);
+        int size = list.size();
+        return list.get(size - k).val;
+    }
+
+    private void find(List<TreeNode> list, TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        find(list, root.left);
+        list.add(root);
+        find(list, root.right);
+    }
+
+    static class Node {
+        public int val;
+        public Node left;
+        public Node right;
+
+        public Node() {
+        }
+
+        public Node(int val) {
+            this.val = val;
+        }
+
+        public Node(int val, Node left, Node right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
     }
 }
+
 
