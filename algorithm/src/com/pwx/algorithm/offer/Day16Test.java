@@ -2,6 +2,8 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 /**
  * @author 彭伟鑫#A04154
  * @date 2022.7.6
@@ -34,7 +36,16 @@ class Day16Solution {
      * @return -
      */
     public String minNumber(int[] nums) {
-        return null;
+        String[] strs = new String[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            strs[i] = String.valueOf(nums[i]);
+        }
+        Arrays.sort(strs, (x, y) -> (x + y).compareTo(y + x));
+        StringBuilder res = new StringBuilder();
+        for (String s : strs) {
+            res.append(s);
+        }
+        return res.toString();
     }
 
     /**
