@@ -2,7 +2,7 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * @author 彭伟鑫#A04154
@@ -251,7 +251,7 @@ class Day17Solution {
  * ["MedianFinder","addNum","findMedian","addNum","findMedian"]
  * [[],[2],[],[3],[]]
  * 输出：[null,null,2.00000,null,2.50000]
- *  
+ *
  *
  * 限制：
  *
@@ -263,17 +263,68 @@ class Day17Solution {
  *  * double param_2 = obj.findMedian();
  */
 class MedianFinder {
+    /**
+     * 小顶堆，保存较大的一半
+     */
+    Queue<Integer> A;
+    /**
+     * 大顶堆，保存较小的一半
+     */
+    Queue<Integer> B;
 
-    /** initialize your data structure here. */
     public MedianFinder() {
-
+        A = new PriorityQueue<>();
+        B = new PriorityQueue<>(Collections.reverseOrder());
     }
 
     public void addNum(int num) {
-
+        if (A.size() != B.size()) {
+            A.add(num);
+            B.add(A.poll());
+        } else {
+            B.add(num);
+            A.add(B.poll());
+        }
     }
 
     public double findMedian() {
-        return 0;
+        return A.size() != B.size() ? A.peek() : (A.peek() + B.peek()) / 2.0;
+    }
+}
+
+
+class MedianFinder1 {
+
+    List<Integer> list;
+
+    /**
+     * initialize your data structure here.
+     */
+    public MedianFinder1() {
+        list = new ArrayList<>();
+    }
+
+    public void addNum(int num) {
+        list.add(num);
+    }
+
+    public double findMedian() {
+        list.sort(Integer::compareTo);
+        int size = list.size();
+        if (size % 2 == 0) {
+            size = (size - 1) >> 1;
+            return (double) (list.get(size) + list.get(size + 1)) / 2;
+        } else {
+            return (double) list.get(size >> 1);
+        }
+    }
+
+    public static void main(String[] args) {
+        MedianFinder medianFinder = new MedianFinder();
+        medianFinder.addNum(1);
+        medianFinder.addNum(2);
+        System.out.println(medianFinder.findMedian());
+        medianFinder.addNum(3);
+        System.out.println(medianFinder.findMedian());
     }
 }
