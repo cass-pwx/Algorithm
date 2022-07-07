@@ -11,7 +11,11 @@ import java.util.Arrays;
 public class Day16Test {
 
     @Test
-    public void test1(){}
+    public void test1(){
+        Day16Solution solution = new Day16Solution();
+        int[] nums = {0,0,1,2,5};
+        System.out.println(solution.isStraight(nums));
+    }
 }
 
 class Day16Solution {
@@ -72,6 +76,54 @@ class Day16Solution {
      * @return -
      */
     public boolean isStraight(int[] nums) {
-        return false;
+        Arrays.sort(nums);
+        int zeroCnt = 0;
+        int diff = 0;
+        for(int i = 0; i < nums.length - 1; i++){
+            if(nums[i] == 0){
+                zeroCnt ++;
+            }else{
+                if(nums[i] == nums[i+1]) {
+                    return false;
+                }
+                if(nums[i] + 1 != nums[i+1]){
+                    diff += nums[i+1] - nums[i]-1;
+                }
+            }
+        }
+        return zeroCnt >= diff;
+    }
+
+    public boolean isStraight1(int[] nums) {
+        Arrays.sort(nums);
+        int zeroCount = 0;
+        int index = 0;
+        for (int num : nums) {
+            if(num == 0){
+                zeroCount ++;
+                index ++;
+            }else{
+                break;
+            }
+        }
+
+        int start = nums[index++];
+        while (index < nums.length) {
+            if(start == nums[index]){
+                return false;
+            }
+            if(start != nums[index] - 1){
+                if (zeroCount > 0){
+                    zeroCount --;
+                    start ++;
+                }else{
+                    return false;
+                }
+            }else{
+                start = nums[index];
+                index ++;
+            }
+        }
+        return true;
     }
 }
