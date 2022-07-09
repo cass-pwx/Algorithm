@@ -12,7 +12,7 @@ public class Day18Test {
     public void test1(){}
 }
 
-class Solution {
+class Day18Solution {
 
     int maxLevel;
     /**
