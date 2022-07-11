@@ -71,7 +71,26 @@ class Day20Solution {
      * @return -
      */
     public double myPow(double x, int n) {
+        //快速幂
         return -1;
+    }
+
+    public double myPow1(double x, int n) {
+        if (x == 0) {
+            return 0;
+        }
+        if (n == 0) {
+            return 1;
+        }
+        if (n < 0) {
+            x = 1 / x;
+            n = Math.abs(n);
+        }
+        double count = x;
+        for (int i = 2; i <= n; i++) {
+            count *= x;
+        }
+        return count;
     }
 
     /**
