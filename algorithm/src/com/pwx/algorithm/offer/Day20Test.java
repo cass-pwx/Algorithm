@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 public class Day20Test {
 
     @Test
-    public void test1(){}
+    public void test1(){
+        Day20Solution solution = new Day20Solution();
+    }
 }
 
 
@@ -71,8 +73,39 @@ class Day20Solution {
      * @return -
      */
     public double myPow(double x, int n) {
-        //快速幂
-        return -1;
+        if (x == 0) {
+            return 0;
+        }
+        if (n == 0) {
+            return 1;
+        }
+        if (n < 0) {
+            x = 1 / x;
+            n = Math.abs(n);
+        }
+        return f(x, n);
+    }
+
+    private double f(double x, int n) {
+        if(n == 0){
+            return 1;
+        }
+        double temp = f(x, n / 2);
+        return (n % 2 == 0 ? 1 : x) * temp * temp;
+    }
+
+
+    public double f1(double x, int n) {
+        double r = 1;
+        double base = x;
+        while(n != 0){
+            if(n % 2 != 0){
+                r *= base;
+            }
+            base *= base;
+            n /= 2;
+        }
+        return r;
     }
 
     public double myPow1(double x, int n) {
@@ -94,7 +127,8 @@ class Day20Solution {
     }
 
     /**
-     * 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。如果是则返回true，否则返回false。假设输入的数组的任意两个数字都互不相同。
+     * 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。
+     * 如果是则返回true，否则返回false。假设输入的数组的任意两个数字都互不相同。
      *
      * 参考以下这颗二叉搜索树：
      *
@@ -103,6 +137,7 @@ class Day20Solution {
      *    2   6
      *   / \
      *  1   3
+     *
      * 示例 1：
      *
      * 输入: [1,6,3,2,5]
