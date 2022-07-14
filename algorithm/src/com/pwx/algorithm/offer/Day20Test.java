@@ -2,10 +2,7 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 彭伟鑫#A04154
@@ -202,6 +199,7 @@ class Day20Solution {
      *
      * 输入: [1,6,3,2,5]
      * 输出: false
+     *
      * 示例 2：
      *
      * 输入: [1,3,2,6,5]
@@ -211,7 +209,46 @@ class Day20Solution {
      * @return -
      */
     public boolean verifyPostorder(int[] postorder) {
+        Stack<Integer> stack = new Stack<>();
+        int root = Integer.MAX_VALUE;
+        for (int i = postorder.length - 1; i >= 0; i--) {
+            if (postorder[i] > root) {
+                return false;
+            }
+            while (!stack.isEmpty() && stack.peek() > postorder[i]) {
+                root = stack.pop();
+            }
+            stack.add(postorder[i]);
+        }
+        return true;
+    }
 
-        return false;
+
+    public boolean verifyPostorder1(int[] postorder) {
+        return recur(postorder, 0, postorder.length - 1);
+    }
+
+    /**
+     * 划分左右子树： 遍历后序遍历的 [i, j][i,j] 区间元素，寻找 第一个大于根节点 的节点，索引记为 m 。
+     * 此时，可划分出左子树区间 [i,m-1][i,m−1] 、右子树区间 [m, j - 1][m,j−1] 、根节点索引 j
+     *
+     * @param postorder -
+     * @param i         -
+     * @param j         -
+     * @return -
+     */
+    boolean recur(int[] postorder, int i, int j) {
+        if (i >= j) {
+            return true;
+        }
+        int p = i;
+        while (postorder[p] < postorder[j]) {
+            p++;
+        }
+        int m = p;
+        while (postorder[p] > postorder[j]) {
+            p++;
+        }
+        return p == j && recur(postorder, i, m - 1) && recur(postorder, m, j - 1);
     }
 }
