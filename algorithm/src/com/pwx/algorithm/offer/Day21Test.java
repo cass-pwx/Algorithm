@@ -9,7 +9,11 @@ import org.junit.jupiter.api.Test;
 public class Day21Test {
 
     @Test
-    public void test1(){}
+    public void test1() {
+        int a = 11;
+        Day21Solution solution = new Day21Solution();
+        System.out.println(solution.hammingWeight(a));
+    }
 }
 
 class Day21Solution {
@@ -43,7 +47,7 @@ class Day21Solution {
      * 输入：n = 4294967293 (控制台输入 11111111111111111111111111111101，部分语言中 n = -3）
      * 输出：31
      * 解释：输入的二进制串 11111111111111111111111111111101 中，共有 31 位为 '1'。
-     *  
+     *
      *
      * 提示：
      *
@@ -53,7 +57,23 @@ class Day21Solution {
      * @return -
      */
     public int hammingWeight(int n) {
-        return -1;
+        int count = 0;
+        while (n != 0) {
+            n &= n - 1;
+            count++;
+        }
+        return count;
+    }
+
+
+    public int hammingWeight1(int n) {
+        int count = 0;
+        for (int i = 0; i < 32; i++) {
+            if ((n & (1 << i)) != 0) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -75,6 +95,13 @@ class Day21Solution {
      * @return -
      */
     public int add(int a, int b) {
-        return  -1;
+        //无进位时跳出。
+        while (b != 0) {
+            int c = (a & b) << 1;
+            //异或
+            a ^= b;
+            b = c;
+        }
+        return a;
     }
 }
