@@ -18,7 +18,7 @@ public class Day22Test {
         int[] c = {4,3,4,4};
         System.out.println(solution.getSingleNumber(a));
         System.out.println(Arrays.toString(solution.singleNumbers(b)));
-        System.out.println(solution.singleNumber1(c));
+        System.out.println(solution.singleNumber(c));
     }
 }
 
