@@ -2,6 +2,8 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Stack;
+
 /**
  * @author 彭伟鑫
  * @date 2022.7.15
@@ -10,6 +12,10 @@ public class Day25Test {
 
     @Test
     public void test1() {
+        Day25Solution solution = new Day25Solution();
+        int[] a = {1,2,3,4,5};
+        int[] b = {4,5,3,2,1};
+        System.out.println(solution.validateStackSequences(a, b));
     }
 }
 
@@ -20,7 +26,7 @@ class Day25Solution {
      * <p>
      * <p>
      * 示例 1：
-     * <p>
+     * 
      * 输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
      * 输出：[1,2,3,6,9,8,7,4,5]
      * 示例 2：
@@ -41,10 +47,14 @@ class Day25Solution {
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
             return new int[0];
         }
-        int rows = matrix.length, columns = matrix[0].length;
+        int rows = matrix.length;
+        int columns = matrix[0].length;
         int[] order = new int[rows * columns];
         int index = 0;
-        int left = 0, right = columns - 1, top = 0, bottom = rows - 1;
+        int left = 0;
+        int right = columns - 1;
+        int top = 0;
+        int bottom = rows - 1;
         while (left <= right && top <= bottom) {
             for (int column = left; column <= right; column++) {
                 order[index++] = matrix[top][column];
@@ -72,17 +82,20 @@ class Day25Solution {
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
             return new int[0];
         }
-        int rows = matrix.length, columns = matrix[0].length;
+        int rows = matrix.length;
+        int columns = matrix[0].length;
         boolean[][] visited = new boolean[rows][columns];
         int total = rows * columns;
         int[] order = new int[total];
-        int row = 0, column = 0;
+        int row = 0;
+        int column = 0;
         int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
         int directionIndex = 0;
         for (int i = 0; i < total; i++) {
             order[i] = matrix[row][column];
             visited[row][column] = true;
-            int nextRow = row + directions[directionIndex][0], nextColumn = column + directions[directionIndex][1];
+            int nextRow = row + directions[directionIndex][0];
+            int nextColumn = column + directions[directionIndex][1];
             if (nextRow < 0 || nextRow >= rows || nextColumn < 0 || nextColumn >= columns || visited[nextRow][nextColumn]) {
                 directionIndex = (directionIndex + 1) % 4;
             }
@@ -122,6 +135,19 @@ class Day25Solution {
      * @return -
      */
     public boolean validateStackSequences(int[] pushed, int[] popped) {
-        return false;
+        Stack<Integer> stack = new Stack<>();
+        int popIndex = 0;
+        for (int i : pushed) {
+            if(i == popped[popIndex]){
+                popIndex ++;
+                while(!stack.isEmpty() && stack.peek() == popped[popIndex]){
+                    stack.pop();
+                    popIndex ++;
+                }
+            }else{
+                stack.push(i);
+            }
+        }
+        return popIndex == popped.length;
     }
 }
