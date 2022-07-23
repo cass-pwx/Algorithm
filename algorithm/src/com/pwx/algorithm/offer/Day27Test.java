@@ -2,6 +2,10 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * @author 彭伟鑫
  * @date 2022.7.18
@@ -28,11 +32,11 @@ class Day27Solution {
      * 滑动窗口的位置                最大值
      * ---------------               -----
      * [1  3  -1] -3  5  3  6  7       3
-     * 1 [3  -1  -3] 5  3  6  7       3
-     * 1  3 [-1  -3  5] 3  6  7       5
-     * 1  3  -1 [-3  5  3] 6  7       5
-     * 1  3  -1  -3 [5  3  6] 7       6
-     * 1  3  -1  -3  5 [3  6  7]      7
+     * 1  [3  -1  -3] 5  3  6  7       3
+     * 1  3  [-1  -3  5] 3  6  7       5
+     * 1  3  -1  [-3  5  3] 6  7       5
+     * 1  3  -1  -3  [5  3  6] 7       6
+     * 1  3  -1  -3  5  [3  6  7]      7
      * <p>
      * <p>
      * 提示：
@@ -44,7 +48,8 @@ class Day27Solution {
      * @return -
      */
     public int[] maxSlidingWindow(int[] nums, int k) {
-        int[] result = new int[0];
+        int len = nums.length - k + 1;
+        int[] result = new int[len];
         return result;
     }
 }
@@ -76,20 +81,37 @@ class Day27Solution {
  * 1 <= value <= 10^5
  */
 class MaxQueue {
+    Queue<Integer> q;
+    Deque<Integer> d;
 
     public MaxQueue() {
-
+        q = new LinkedList<>();
+        d = new LinkedList<>();
     }
 
     public int max_value() {
-        return -1;
+        if (d.isEmpty()) {
+            return -1;
+        }
+        return d.peekFirst();
     }
 
     public void push_back(int value) {
-
+        while (!d.isEmpty() && d.peekLast() < value) {
+            d.pollLast();
+        }
+        d.offerLast(value);
+        q.offer(value);
     }
 
     public int pop_front() {
-        return -1;
+        if (q.isEmpty()) {
+            return -1;
+        }
+        int ans = q.poll();
+        if (!d.isEmpty() && ans == d.peekFirst()) {
+            d.pollFirst();
+        }
+        return ans;
     }
 }
