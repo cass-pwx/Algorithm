@@ -14,7 +14,7 @@ public class Day26Test {
     @Test
     public void test1() {
         Day26Solution solution = new Day26Solution();
-        String s = "-91283472332";
+        String s = "2147483646";
         System.out.println(solution.strToInt(s));
     }
 
@@ -268,7 +268,7 @@ class Day26Solution {
      * @param str -
      * @return -
      */
-    public int strToInt(String str) {
+    public int strToIn1(String str) {
         char[] c = str.trim().toCharArray();
         if(c.length == 0) {
             return 0;
@@ -314,18 +314,17 @@ class Day26Solution {
      * @param str -
      * @return -
      */
-    public int strToInt1(String str) {
-        if (str == null || str.isEmpty() ||  str.trim().isEmpty()){
+    public int strToInt(String str) {
+        char[] c = str.trim().toCharArray();
+        int len = c.length;
+        if(len == 0) {
             return 0;
         }
-        str = str.trim();
-        str = str.replaceAll("[^ .0-9a-zA-Z+-]","");
         int result = 0;
-        char firstChar = str.charAt(0);
+        char firstChar = c[0];
         //标志位。负数的时候为true
         boolean negative = false;
         int i = 0;
-        int len = str.length();
         //如果是正数，最小值为-2147483647；否则为-2147483648
         int limit = -Integer.MAX_VALUE;
         // Possible leading "+" or "-"
@@ -333,7 +332,7 @@ class Day26Solution {
             if (firstChar == '-') {
                 negative = true;
                 limit = Integer.MIN_VALUE;
-            }else if(firstChar == '.'){
+            }else if(firstChar != '+'){
                 return 0;
             }
             // Cannot have lone "+" or "-"
@@ -342,26 +341,22 @@ class Day26Solution {
             }
             i++;
         }
-        int digit;
         int multmin = limit / 10;
         while (i < len) {
             // Accumulating negatively avoids surprises near MAX_VALUE
-            digit = Character.digit(str.charAt(i++),10);
-            if (digit < 0 && i == 0) {
-                return 0;
-            }
-            if(digit < 0){
+            if(c[i] < '0' || c[i] > '9') {
                 break;
             }
-
+            int num = c[i] - '0';
             if (result < multmin) {
                 return negative ? limit : -limit;
             }
             result *= 10;
-            if (result < limit + digit) {
+            if (result < limit + num) {
                 return negative ? limit : -limit;
             }
-            result -= digit;
+            result -= num;
+            i++;
         }
         return negative ? result : -result;
     }
