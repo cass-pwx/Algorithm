@@ -13,6 +13,9 @@ public class Day26Test {
 
     @Test
     public void test1() {
+        Day26Solution solution = new Day26Solution();
+        String s = "-91283472332";
+        System.out.println(solution.strToInt(s));
     }
 
 }
@@ -266,6 +269,138 @@ class Day26Solution {
      * @return -
      */
     public int strToInt(String str) {
-        return -1;
+        char[] c = str.trim().toCharArray();
+        if(c.length == 0) {
+            return 0;
+        }
+        int res = 0;
+        int bndry = Integer.MAX_VALUE / 10;
+        int i = 1;
+        int sign = 1;
+        if(c[0] == '-') {
+            sign = -1;
+        } else if(c[0] != '+') {
+            i = 0;
+        }
+        for(int j = i; j < c.length; j++) {
+            if(c[j] < '0' || c[j] > '9') {
+                break;
+            }
+            //临界
+            if(res > bndry || (res == bndry  && c[j] > '7')) {
+                return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+            res = res * 10 + (c[j] - '0');
+        }
+        return sign * res;
+    }
+
+    /**
+     * 状态机
+     * @param str -
+     * @return -
+     */
+    public int strToInt2(String str) {
+        Automaton automaton = new Automaton();
+        int length = str.length();
+        for (int i = 0; i < length; ++i) {
+            automaton.get(str.charAt(i));
+        }
+        return (int) (automaton.sign * automaton.ans);
+    }
+
+    /**
+     * 参考Integer.parseInt
+     * @param str -
+     * @return -
+     */
+    public int strToInt1(String str) {
+        if (str == null || str.isEmpty() ||  str.trim().isEmpty()){
+            return 0;
+        }
+        str = str.trim();
+        str = str.replaceAll("[^ .0-9a-zA-Z+-]","");
+        int result = 0;
+        char firstChar = str.charAt(0);
+        //标志位。负数的时候为true
+        boolean negative = false;
+        int i = 0;
+        int len = str.length();
+        //如果是正数，最小值为-2147483647；否则为-2147483648
+        int limit = -Integer.MAX_VALUE;
+        // Possible leading "+" or "-"
+        if (firstChar < '0') {
+            if (firstChar == '-') {
+                negative = true;
+                limit = Integer.MIN_VALUE;
+            }else if(firstChar == '.'){
+                return 0;
+            }
+            // Cannot have lone "+" or "-"
+            if (len == 1) {
+                return 0;
+            }
+            i++;
+        }
+        int digit;
+        int multmin = limit / 10;
+        while (i < len) {
+            // Accumulating negatively avoids surprises near MAX_VALUE
+            digit = Character.digit(str.charAt(i++),10);
+            if (digit < 0 && i == 0) {
+                return 0;
+            }
+            if(digit < 0){
+                break;
+            }
+
+            if (result < multmin) {
+                return negative ? limit : -limit;
+            }
+            result *= 10;
+            if (result < limit + digit) {
+                return negative ? limit : -limit;
+            }
+            result -= digit;
+        }
+        return negative ? result : -result;
+    }
+
+    static class Automaton {
+        public int sign = 1;
+        public long ans = 0;
+        private String state = "start";
+        private static final Map<String, String[]> table;
+
+        static {
+            table = new HashMap<>();
+            table.put("start", new String[]{"start", "signed", "in_number", "end"});
+            table.put("signed", new String[]{"end", "end", "in_number", "end"});
+            table.put("in_number", new String[]{"end", "end", "in_number", "end"});
+            table.put("end", new String[]{"end", "end", "end", "end"});
+        }
+
+        public void get(char c) {
+            state = table.get(state)[get_col(c)];
+            if ("in_number".equals(state)) {
+                ans = ans * 10 + c - '0';
+                ans = sign == 1 ? Math.min(ans, (long) Integer.MAX_VALUE) : Math.min(ans, -(long) Integer.MIN_VALUE);
+            } else if ("signed".equals(state)) {
+                sign = c == '+' ? 1 : -1;
+            }
+        }
+
+        private int get_col(char c) {
+            if (c == ' ') {
+                return 0;
+            }
+            if (c == '+' || c == '-') {
+                return 1;
+            }
+            if (Character.isDigit(c)) {
+                return 2;
+            }
+            return 3;
+        }
     }
 }
