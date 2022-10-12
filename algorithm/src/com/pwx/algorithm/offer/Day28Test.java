@@ -2,6 +2,10 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author 彭伟鑫
  * @date 2022.7.18
@@ -10,11 +14,17 @@ public class Day28Test {
 
     @Test
     public void test1() {
+        Day28Solution solution = new Day28Solution();
+        String s = "suvyls";
+        System.out.println(solution.permutation1(s).length);
     }
 
 }
 
 class Day28Solution {
+
+    List<String> rec;
+    boolean[] vis;
 
     /**
      * 输入一个字符串，打印出该字符串中字符的所有排列。
@@ -34,7 +44,83 @@ class Day28Solution {
      * @return -
      */
     public String[] permutation(String s) {
-        return new String[0];
+        int n = s.length();
+        rec = new ArrayList<>();
+        vis = new boolean[n];
+        char[] arr = s.toCharArray();
+        Arrays.sort(arr);
+        StringBuffer perm = new StringBuffer();
+        backtrack(arr, 0, n, perm);
+        int size = rec.size();
+        String[] recArr = new String[size];
+        for (int i = 0; i < size; i++) {
+            recArr[i] = rec.get(i);
+        }
+        return recArr;
+    }
+
+    public void backtrack(char[] arr, int i, int n, StringBuffer perm) {
+        if (i == n) {
+            rec.add(perm.toString());
+            return;
+        }
+        for (int j = 0; j < n; j++) {
+            if (vis[j] || (j > 0 && !vis[j - 1] && arr[j - 1] == arr[j])) {
+                continue;
+            }
+            vis[j] = true;
+            perm.append(arr[j]);
+            backtrack(arr, i + 1, n, perm);
+            perm.deleteCharAt(perm.length() - 1);
+            vis[j] = false;
+        }
+    }
+
+    public String[] permutation1(String s) {
+        List<String> ret = new ArrayList<>();
+        char[] arr = s.toCharArray();
+        Arrays.sort(arr);
+        do {
+            ret.add(new String(arr));
+        } while (nextPermutation(arr));
+        int size = ret.size();
+        String[] retArr = new String[size];
+        for (int i = 0; i < size; i++) {
+            retArr[i] = ret.get(i);
+        }
+        return retArr;
+    }
+
+    public boolean nextPermutation(char[] arr) {
+        int i = arr.length - 2;
+        while (i >= 0 && arr[i] >= arr[i + 1]) {
+            i--;
+        }
+        if (i < 0) {
+            return false;
+        }
+        int j = arr.length - 1;
+        while (j >= 0 && arr[i] >= arr[j]) {
+            j--;
+        }
+        swap(arr, i, j);
+        reverse(arr, i + 1);
+        return true;
+    }
+
+    public void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    public void reverse(char[] arr, int start) {
+        int left = start, right = arr.length - 1;
+        while (left < right) {
+            swap(arr, left, right);
+            left++;
+            right--;
+        }
     }
 }
 

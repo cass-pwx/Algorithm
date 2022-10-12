@@ -2,6 +2,8 @@ package com.pwx.algorithm.offer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 /**
  * @author 彭伟鑫#A04154
  * @date 2022.7.19
@@ -9,7 +11,12 @@ import org.junit.jupiter.api.Test;
 public class Day29Test {
 
     @Test
-    public void test1(){}
+    public void test1() {
+        Day29Solution solution = new Day29Solution();
+        String s = "aaa";
+        String p = "ab*.*";
+        solution.isMatch(s, p);
+    }
 }
 
 class Day29Solution {
@@ -66,7 +73,36 @@ class Day29Solution {
      * @return -
      */
     public boolean isMatch(String s, String p) {
-        return false;
+        int m = s.length();
+        int n = p.length();
+
+        boolean[][] f = new boolean[m + 1][n + 1];
+        f[0][0] = true;
+        for (int i = 0; i <= m; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                if (p.charAt(j - 1) == '*') {
+                    f[i][j] = f[i][j - 2];
+                    if (matches(s, p, i, j - 1)) {
+                        f[i][j] = f[i][j] || f[i - 1][j];
+                    }
+                } else {
+                    if (matches(s, p, i, j)) {
+                        f[i][j] = f[i - 1][j - 1];
+                    }
+                }
+            }
+        }
+        return f[m][n];
+    }
+
+    public boolean matches(String s, String p, int i, int j) {
+        if (i == 0) {
+            return false;
+        }
+        if (p.charAt(j - 1) == '.') {
+            return true;
+        }
+        return s.charAt(i - 1) == p.charAt(j - 1);
     }
 
     /**
@@ -86,7 +122,23 @@ class Day29Solution {
      * @return -
      */
     public int nthUglyNumber(int n) {
-        return -1;
+        int a = 0, b = 0, c = 0;
+        int[] dp = new int[n];
+        dp[0] = 1;
+        for (int i = 1; i < n; i++) {
+            int n2 = dp[a] * 2, n3 = dp[b] * 3, n5 = dp[c] * 5;
+            dp[i] = Math.min(Math.min(n2, n3), n5);
+            if (dp[i] == n2) {
+                a++;
+            }
+            if (dp[i] == n3) {
+                b++;
+            }
+            if (dp[i] == n5) {
+                c++;
+            }
+        }
+        return dp[n - 1];
     }
 
     /**
@@ -112,6 +164,17 @@ class Day29Solution {
      * @return -
      */
     public double[] dicesProbability(int n) {
-        return new double[0];
+        double[] dp = new double[6];
+        Arrays.fill(dp, 1.0 / 6.0);
+        for (int i = 2; i <= n; i++) {
+            double[] tmp = new double[5 * i + 1];
+            for (int j = 0; j < dp.length; j++) {
+                for (int k = 0; k < 6; k++) {
+                    tmp[j + k] += dp[j] / 6.0;
+                }
+            }
+            dp = tmp;
+        }
+        return dp;
     }
 }
